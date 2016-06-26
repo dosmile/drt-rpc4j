@@ -11,10 +11,14 @@
 
     <context:property-placeholder location="classpath:rpc.properties"/>
 
+    <!-- 配置的值位于rpc.properties -->
+
+    <!-- 配置服务注册组件 -->
     <bean id="serviceRegistry" class="org.rpc4j.common.registry.ServiceRegistry">
         <constructor-arg name="registryAddress" value="${registry.address}"/>
     </bean>
 
+    <!-- 配置RPC的服务器 -->
     <bean id="rpcServer" class="org.rpc4j.server.RPCServer">
         <constructor-arg index="0" name="serverAddress" value="${server.address}"/>
         <constructor-arg index="1" name="serviceRegistry" ref="serviceRegistry"/>
