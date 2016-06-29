@@ -40,6 +40,7 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
     private String serverAddress;
     private ServiceRegistry serviceRegistry;
 
+    // 存放接口名与服务对象之间的映射关系
     private Map<String, Object> handlerMap = new HashMap<String, Object>();
 
     public RPCServer(String serverAddress) {
@@ -57,7 +58,11 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
 
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
+
+        //获取所有带 @RPCService 注解的 Bean
         Map<String, Object> serviceBeanMap = ctx.getBeansWithAnnotation(RPCService.class);
+
+        // 存放接口名与Bean之间的映射关系
         if (MapUtils.isNotEmpty(serviceBeanMap)) {
             for (Object serviceBean : serviceBeanMap.values()) {
                 String interfaceName = serviceBean.getClass().getAnnotation(RPCService.class).value().getName();

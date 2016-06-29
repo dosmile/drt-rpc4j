@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Component
+@Component                             //能够让使用了@RPCService 注解的 对象被 spring扫描
 public @interface RPCService {
 
 	Class<?> value();
