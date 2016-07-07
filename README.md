@@ -2,9 +2,11 @@
 
 轻量级 RPC framework
 
-参考来源：http://www.oschina.net/code/snippet_223750_45050
+参考来源：
+http://my.oschina.net/huangyong/blog/361751
+http://www.oschina.net/code/snippet_223750_45050
 
-1. 项目所选用的相关技术：
+## 项目所选用的相关技术：
 Spring：它是最强大的依赖注入框架，也是业界的权威标准。
 Netty：它使 NIO 编程更加容易，屏蔽了 Java 底层的 NIO 细节。
 Protostuff：它基于 Protobuf 序列化框架，面向 POJO，无需编写 .proto 文件。
