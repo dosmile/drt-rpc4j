@@ -29,10 +29,9 @@ import org.springframework.context.ApplicationContextAware;
 
 /**
  * RPC服务器-(用于发布 RPC服务)
- *
- * @author huangyong
- * @since 1.0.0
  */
+
+// 在rpc4j-sample-server中的spring.xml配置为bean，并使用构造注入传入serverAddress与serviceRegistry
 public class RPCServer implements ApplicationContextAware, InitializingBean {
 
     private static final Logger Logger = LoggerFactory.getLogger(RPCServer.class);
@@ -72,7 +71,7 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws Exception {            //在bean创建并注入好后执行
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {

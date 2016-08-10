@@ -14,10 +14,10 @@ import java.lang.annotation.Target;
  * 元注解：修饰注解的注解
  */
 @Target({ ElementType.TYPE })
-@Retention(RetentionPolicy.RUNTIME)    //表示注解的信息保留在class文件中，在虚拟机运行时也会保留,是的在运行时能够通过反射拿到注解信息？
-@Component                             //能够让使用了@RPCService 注解的 对象被 spring扫描
+@Retention(RetentionPolicy.RUNTIME)    //表示注解的信息保留在class文件中，在虚拟机运行时也会保留,使得在运行时能够通过反射拿到注解信息？
+@Component                             //能够让使用了@RPCService注解的对象被spring扫描，并作为容器中的bean
 public @interface RPCService {
 
-	Class<?> value();
+	Class<?> value();                  //返回使用注解时设置的class对象 ？？
 	
 }
