@@ -46,10 +46,6 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
         this.serverAddress = serverAddress;
     }
 
-    /**
-     * @param serverAddress
-     * @param serviceRegistry
-     */
     public RPCServer(String serverAddress, ServiceRegistry serviceRegistry) {
         this.serverAddress = serverAddress;
         this.serviceRegistry = serviceRegistry;
@@ -81,15 +77,15 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
                         @Override
                         public void initChannel(SocketChannel channel) throws Exception {
                             channel.pipeline()
-                                    .addLast(new RpcDecoder(RpcRequest.class))
-                                    .addLast(new RpcEncoder(RpcResponse.class))
-                                    .addLast(new RpcHandler(handlerMap));
+                                    .addLast(new RpcDecoder(RpcRequest.class))      // 解码 RPC 请求
+                                    .addLast(new RpcEncoder(RpcResponse.class))     // 编码 RPC 响应
+                                    .addLast(new RpcHandler(handlerMap));           // 处理 RPC 请求
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            String[] array = serverAddress.split(":");
+            String[] array = serverAddress.split(":");            // serverAddress = "127.0.0.1:8000"
             String host = array[0];
             int port = Integer.parseInt(array[1]);
 
@@ -97,7 +93,7 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
             Logger.debug("server started on port {}", port);
 
             if (serviceRegistry != null) {
-                serviceRegistry.register(serverAddress);
+                serviceRegistry.register(serverAddress);          // 注册 服务地址
             }
 
             future.channel().closeFuture().sync();

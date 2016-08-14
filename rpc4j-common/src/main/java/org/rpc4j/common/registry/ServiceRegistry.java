@@ -38,7 +38,7 @@ public class ServiceRegistry {
         }
     }
 
-    // zookeeper client 要链接到 zookeeper server 才能给使用
+    // zookeeper client 要链接到 zookeeper server 才能够使用
     private ZooKeeper connectServer() {
 		ZooKeeper zk = null;
         try {
