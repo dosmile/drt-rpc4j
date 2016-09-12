@@ -66,12 +66,13 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
         }
     }
 
+    // 此处，参考netty官方的 user guide：http://netty.io/wiki/user-guide-for-4.x.html
     @Override
     public void afterPropertiesSet() throws Exception {            //在bean创建并注入好后执行
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup();        // NioEventLoopGroup: 处理I/O操作的多线程事件循环器
+        EventLoopGroup workerGroup = new NioEventLoopGroup();      // boss：接收进来的链接，worker：处理已经接收的链接
         try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
+            ServerBootstrap bootstrap = new ServerBootstrap();     // ServerBootstrap：启动NIO服务的辅助启动类
             bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
