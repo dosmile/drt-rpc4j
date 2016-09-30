@@ -15,9 +15,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 服务发现
- *
- * @author huangyong
- * @since 1.0.0
  */
 public class ServiceDiscovery {
 
