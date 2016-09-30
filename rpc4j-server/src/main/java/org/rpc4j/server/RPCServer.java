@@ -29,10 +29,9 @@ import org.springframework.context.ApplicationContextAware;
 
 /**
  * RPC服务器-(用于发布 RPC服务)
- *
- * @author huangyong
- * @since 1.0.0
  */
+
+// 在rpc4j-sample-server中的spring.xml配置为bean，并使用构造注入传入serverAddress与serviceRegistry
 public class RPCServer implements ApplicationContextAware, InitializingBean {
 
     private static final Logger Logger = LoggerFactory.getLogger(RPCServer.class);
@@ -47,10 +46,6 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
         this.serverAddress = serverAddress;
     }
 
-    /**
-     * @param serverAddress
-     * @param serviceRegistry
-     */
     public RPCServer(String serverAddress, ServiceRegistry serviceRegistry) {
         this.serverAddress = serverAddress;
         this.serviceRegistry = serviceRegistry;
@@ -71,26 +66,27 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
         }
     }
 
+    // 此处，参考netty官方的 user guide：http://netty.io/wiki/user-guide-for-4.x.html
     @Override
-    public void afterPropertiesSet() throws Exception {
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+    public void afterPropertiesSet() throws Exception {            //在bean创建并注入好后执行
+        EventLoopGroup bossGroup = new NioEventLoopGroup();        // NioEventLoopGroup: 处理I/O操作的多线程事件循环器
+        EventLoopGroup workerGroup = new NioEventLoopGroup();      // boss：接收进来的链接，worker：处理已经接收的链接
         try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
+            ServerBootstrap bootstrap = new ServerBootstrap();     // ServerBootstrap：启动NIO服务的辅助启动类
             bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel channel) throws Exception {
                             channel.pipeline()
-                                    .addLast(new RpcDecoder(RpcRequest.class))
-                                    .addLast(new RpcEncoder(RpcResponse.class))
-                                    .addLast(new RpcHandler(handlerMap));
+                                    .addLast(new RpcDecoder(RpcRequest.class))      // 解码 RPC 请求
+                                    .addLast(new RpcEncoder(RpcResponse.class))     // 编码 RPC 响应
+                                    .addLast(new RpcHandler(handlerMap));           // 处理 RPC 请求
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            String[] array = serverAddress.split(":");
+            String[] array = serverAddress.split(":");            // serverAddress = "127.0.0.1:8000"
             String host = array[0];
             int port = Integer.parseInt(array[1]);
 
@@ -98,7 +94,7 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
             Logger.debug("server started on port {}", port);
 
             if (serviceRegistry != null) {
-                serviceRegistry.register(serverAddress);
+                serviceRegistry.register(serverAddress);          // 注册 服务地址
             }
 
             future.channel().closeFuture().sync();
